@@ -358,6 +358,9 @@ export const ApiKeysCardEditor = memo(function ApiKeysCardEditor({
             <input
               id={apiKeyInputId}
               className="input"
+              autoComplete="off"
+              aria-autocomplete="none"
+              spellCheck={false}
               placeholder={t('config_management.visual.api_keys.input_placeholder')}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}

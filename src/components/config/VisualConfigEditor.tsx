@@ -576,6 +576,9 @@ export function VisualConfigEditor({
                     <Input
                       label={t('config_management.visual.sections.remote.secret_key')}
                       type="password"
+                      autoComplete="new-password"
+                      aria-autocomplete="none"
+                      spellCheck={false}
                       placeholder={t(
                         'config_management.visual.sections.remote.secret_key_placeholder'
                       )}

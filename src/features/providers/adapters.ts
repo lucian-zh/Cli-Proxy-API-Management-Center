@@ -4,16 +4,9 @@ import type {
   OpenAIProviderConfig,
   ProviderKeyConfig,
 } from '@/types';
-import {
-  hasDisableAllModelsRule,
-  stripDisableAllModelsRule,
-} from '@/components/providers/utils';
+import { hasDisableAllModelsRule, stripDisableAllModelsRule } from '@/components/providers/utils';
 import { maskApiKey } from '@/utils/format';
-import type {
-  ProviderBrand,
-  ProviderResource,
-  ProviderResourceSelector,
-} from './types';
+import type { ProviderBrand, ProviderResource, ProviderResourceSelector } from './types';
 
 const countHeaders = (headers?: Record<string, string>): number =>
   headers ? Object.keys(headers).length : 0;
@@ -63,6 +56,7 @@ function providerKeyToResource(
     baseUrl: config.baseUrl ?? null,
     proxyUrl: config.proxyUrl ?? null,
     prefix: config.prefix ?? null,
+    priority: config.priority ?? null,
     modelCount: config.models?.length ?? 0,
     headerCount: countHeaders(config.headers),
     excludedModelCount: stripDisableAllModelsRule(config.excludedModels).length,
@@ -90,10 +84,7 @@ export function vertexToResource(config: ProviderKeyConfig, index: number): Prov
   return providerKeyToResource('vertex', config, index);
 }
 
-export function openaiToResource(
-  config: OpenAIProviderConfig,
-  index: number
-): ProviderResource {
+export function openaiToResource(config: OpenAIProviderConfig, index: number): ProviderResource {
   const name = (config.name ?? '').trim();
   const firstEntry = config.apiKeyEntries?.[0];
   const previewApiKey = firstEntry?.apiKey ? maskApiKey(firstEntry.apiKey) : null;
@@ -109,6 +100,7 @@ export function openaiToResource(
     baseUrl: config.baseUrl ?? null,
     proxyUrl: null,
     prefix: config.prefix ?? null,
+    priority: config.priority ?? null,
     modelCount: config.models?.length ?? 0,
     headerCount: countHeaders(config.headers),
     excludedModelCount: 0,
@@ -138,6 +130,7 @@ export function ampcodeToResource(config?: AmpcodeConfig | null): ProviderResour
     baseUrl: upstreamUrl || null,
     proxyUrl: null,
     prefix: null,
+    priority: null,
     modelCount: safe.modelMappings?.length ?? 0,
     headerCount: 0,
     excludedModelCount: 0,

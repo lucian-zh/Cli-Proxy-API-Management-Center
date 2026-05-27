@@ -41,17 +41,14 @@ interface ProviderResourceTableProps {
   onToggleDisabled?: (resource: ProviderResource, disabled: boolean) => void;
 }
 
-const columnWidths = ['18%', '18%', '6%', '14%', '24%', '20%'];
+const columnWidths = ['17%', '17%', '7%', '8%', '14%', '21%', '16%'];
 
 const resolveStatusBarData = (
   resource: ProviderResource,
   usageByProvider: ProviderRecentUsageMap
 ): StatusBarData => {
   if (resource.brand === 'openaiCompatibility') {
-    return getOpenAIProviderRecentStatusData(
-      resource.raw as OpenAIProviderConfig,
-      usageByProvider
-    );
+    return getOpenAIProviderRecentStatusData(resource.raw as OpenAIProviderConfig, usageByProvider);
   }
   return getProviderRecentStatusData(
     usageByProvider,
@@ -66,10 +63,7 @@ const resolveTotalStats = (
   usageByProvider: ProviderRecentUsageMap
 ): { success: number; failure: number } => {
   if (resource.brand === 'openaiCompatibility') {
-    return getOpenAIProviderTotalStats(
-      resource.raw as OpenAIProviderConfig,
-      usageByProvider
-    );
+    return getOpenAIProviderTotalStats(resource.raw as OpenAIProviderConfig, usageByProvider);
   }
   return getProviderTotalStats(
     usageByProvider,
@@ -110,17 +104,17 @@ export function ProviderResourceTable({
       items.push(
         renderMetric('models', t('providersPage.table.metrics.models'), r.modelCount),
         renderMetric('keys', t('providersPage.table.metrics.keys'), r.apiKeyEntryCount),
-        renderMetric('headers', t('providersPage.table.metrics.headers'), r.headerCount),
+        renderMetric('headers', t('providersPage.table.metrics.headers'), r.headerCount)
       );
     } else if (r.brand === 'ampcode') {
       items.push(
         renderMetric('mappings', t('providersPage.table.metrics.mappings'), r.modelCount),
-        renderMetric('keys', t('providersPage.table.metrics.keys'), r.apiKeyEntryCount),
+        renderMetric('keys', t('providersPage.table.metrics.keys'), r.apiKeyEntryCount)
       );
     } else {
       items.push(
         renderMetric('models', t('providersPage.table.metrics.models'), r.modelCount),
-        renderMetric('headers', t('providersPage.table.metrics.headers'), r.headerCount),
+        renderMetric('headers', t('providersPage.table.metrics.headers'), r.headerCount)
       );
       if (r.brand === 'codex' && r.flags.websockets) {
         items.push(renderFlagTag('ws', t('providersPage.table.websocketsTag')));
@@ -163,9 +157,7 @@ export function ProviderResourceTable({
       return (
         <div className={styles.primaryCell}>
           <span className={styles.primaryName}>{r.name ?? r.identifier}</span>
-          <span className={styles.primarySub}>
-            {(r.apiKeyPreview ?? '—') + extra}
-          </span>
+          <span className={styles.primarySub}>{(r.apiKeyPreview ?? '—') + extra}</span>
         </div>
       );
     }
@@ -182,9 +174,7 @@ export function ProviderResourceTable({
     return (
       <div className={styles.primaryCell}>
         <span className={styles.primaryName}>{r.apiKeyPreview ?? '—'}</span>
-        {r.authIndex ? (
-          <span className={styles.primarySub}>auth: {r.authIndex}</span>
-        ) : null}
+        {r.authIndex ? <span className={styles.primarySub}>auth: {r.authIndex}</span> : null}
       </div>
     );
   };
@@ -200,11 +190,14 @@ export function ProviderResourceTable({
     if (r.brand === 'ampcode' && !r.baseUrl) {
       return <span className={styles.baseUrl}>{t('providersPage.status.notConfigured')}</span>;
     }
-    return (
-      <span className={styles.baseUrl}>
-        {r.baseUrl ?? t('providersPage.status.notSet')}
-      </span>
-    );
+    return <span className={styles.baseUrl}>{r.baseUrl ?? t('providersPage.status.notSet')}</span>;
+  };
+
+  const renderPriority = (r: ProviderResource) => {
+    if (r.brand === 'ampcode') {
+      return <span className={styles.baseUrl}>—</span>;
+    }
+    return <span className={styles.priorityValue}>{r.priority ?? 0}</span>;
   };
 
   return (
@@ -218,6 +211,7 @@ export function ProviderResourceTable({
           <TableHead>{t('providersPage.table.key')}</TableHead>
           <TableHead>{t('providersPage.table.baseUrl')}</TableHead>
           <TableHead>{t('providersPage.table.prefix')}</TableHead>
+          <TableHead>{t('providersPage.table.priority')}</TableHead>
           <TableHead>{t('providersPage.table.models')}</TableHead>
           <TableHead>{t('providersPage.table.status')}</TableHead>
           <TableHead alignRight>{t('providersPage.table.actions')}</TableHead>
@@ -239,6 +233,7 @@ export function ProviderResourceTable({
                   <span className={styles.baseUrl}>{t('providersPage.status.none')}</span>
                 )}
               </TableCell>
+              <TableCell>{renderPriority(resource)}</TableCell>
               <TableCell>{renderModelsSummary(resource)}</TableCell>
               <TableCell>
                 <div className={styles.statusCell}>
@@ -269,16 +264,11 @@ export function ProviderResourceTable({
               <TableCell alignRight>
                 <div className={styles.actions}>
                   {!isAmpcode && onToggleDisabled ? (
-                    <span
-                      className={styles.toggleWrap}
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <span className={styles.toggleWrap} onClick={(e) => e.stopPropagation()}>
                       <ToggleSwitch
                         checked={!resource.disabled}
                         disabled={disableMutations}
-                        onChange={(value) =>
-                          onToggleDisabled(resource, !value)
-                        }
+                        onChange={(value) => onToggleDisabled(resource, !value)}
                         ariaLabel={
                           resource.disabled
                             ? t('providersPage.actions.enable')

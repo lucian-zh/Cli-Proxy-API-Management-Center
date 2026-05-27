@@ -43,6 +43,8 @@ export interface ProviderResource {
   baseUrl: string | null;
   proxyUrl: string | null;
   prefix: string | null;
+  /** 路由优先级; 未配置时后端按 0 处理 */
+  priority: number | null;
   modelCount: number;
   headerCount: number;
   excludedModelCount: number;
