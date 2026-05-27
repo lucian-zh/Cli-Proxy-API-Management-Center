@@ -5,7 +5,13 @@ import codexLogo from '@/assets/icons/codex.svg';
 import geminiLogo from '@/assets/icons/gemini.svg';
 import openaiLogo from '@/assets/icons/openai-light.svg';
 import vertexLogo from '@/assets/icons/vertex.svg';
-import { IconPlus, IconSearch } from '@/components/ui/icons';
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconPlus,
+  IconSearch,
+} from '@/components/ui/icons';
+import { Select } from '@/components/ui/Select';
 import type { ProviderRecentUsageMap } from '@/components/providers/utils';
 import type { ProviderBrand, ProviderGroup, ProviderResource } from '../types';
 import { ProviderResourceTable } from './ProviderResourceTable';
@@ -35,6 +41,13 @@ export interface OpenAIPanelControls {
   onSelectedModelsChange: (next: Set<string>) => void;
 }
 
+export interface ProviderSortControls {
+  sortBy: 'default' | 'priority';
+  sortDir: SortDir;
+  onSortBy: (value: 'default' | 'priority') => void;
+  onSortDir: (value: SortDir) => void;
+}
+
 interface ProviderResourcePanelProps {
   group: ProviderGroup;
   filter: string;
@@ -44,6 +57,7 @@ interface ProviderResourcePanelProps {
   disableMutations?: boolean;
   usageByProvider?: ProviderRecentUsageMap;
   openaiControls?: OpenAIPanelControls;
+  providerSortControls?: ProviderSortControls;
   onView: (resource: ProviderResource) => void;
   onEdit: (resource: ProviderResource) => void;
   onDelete: (resource: ProviderResource) => void;
@@ -60,6 +74,7 @@ export function ProviderResourcePanel({
   disableMutations,
   usageByProvider,
   openaiControls,
+  providerSortControls,
   onView,
   onEdit,
   onDelete,
@@ -70,6 +85,10 @@ export function ProviderResourcePanel({
   const logo = LOGOS[group.id];
 
   const realResources = filteredResources.filter((r) => !r.flags.isPlaceholder);
+  const sortOptions = [
+    { value: 'default', label: t('providersPage.toolbar.sort.default') },
+    { value: 'priority', label: t('providersPage.toolbar.sort.priority') },
+  ];
 
   return (
     <section className={styles.panel}>
@@ -116,6 +135,49 @@ export function ProviderResourcePanel({
               selectedModels={openaiControls.selectedModels}
               onSelectedModelsChange={openaiControls.onSelectedModelsChange}
             />
+          </div>
+        ) : providerSortControls ? (
+          <div className={styles.headerToolbarRow}>
+            <div className={styles.sortGroup}>
+              <span className={styles.sortLabel}>
+                {t('providersPage.toolbar.sortBy')}
+              </span>
+              <Select
+                value={providerSortControls.sortBy}
+                options={sortOptions}
+                onChange={(value) =>
+                  providerSortControls.onSortBy(value as 'default' | 'priority')
+                }
+                ariaLabel={t('providersPage.toolbar.sortBy')}
+                size="sm"
+              />
+              <button
+                type="button"
+                className={styles.sortDirBtn}
+                onClick={() =>
+                  providerSortControls.onSortDir(
+                    providerSortControls.sortDir === 'asc' ? 'desc' : 'asc'
+                  )
+                }
+                disabled={providerSortControls.sortBy === 'default'}
+                aria-label={
+                  providerSortControls.sortDir === 'asc'
+                    ? t('providersPage.toolbar.sort.directionAsc')
+                    : t('providersPage.toolbar.sort.directionDesc')
+                }
+                title={
+                  providerSortControls.sortDir === 'asc'
+                    ? t('providersPage.toolbar.sort.directionAsc')
+                    : t('providersPage.toolbar.sort.directionDesc')
+                }
+              >
+                {providerSortControls.sortDir === 'asc' ? (
+                  <IconChevronUp size={14} />
+                ) : (
+                  <IconChevronDown size={14} />
+                )}
+              </button>
+            </div>
           </div>
         ) : null}
       </div>

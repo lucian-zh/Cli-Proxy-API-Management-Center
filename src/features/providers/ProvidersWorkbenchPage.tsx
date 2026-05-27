@@ -21,6 +21,7 @@ import type { ProviderBrand, ProviderResource } from './types';
 import styles from './ProvidersWorkbenchPage.module.scss';
 
 type SheetMode = 'detail' | 'create' | 'edit';
+type ProviderSortBy = 'default' | 'priority';
 
 interface SheetState {
   open: boolean;
@@ -70,6 +71,8 @@ export function ProvidersWorkbenchPage() {
   const workbench = useProviderWorkbench();
   const [activeBrand, setActiveBrand] = useState<ProviderBrand>('gemini');
   const [filter, setFilter] = useState('');
+  const [providerSortBy, setProviderSortBy] = useState<ProviderSortBy>('default');
+  const [providerSortDir, setProviderSortDir] = useState<SortDir>('desc');
   const [openaiSortBy, setOpenaiSortBy] = useState<OpenAISortBy>('name');
   const [openaiSortDir, setOpenaiSortDir] = useState<SortDir>('asc');
   const [openaiSelectedModels, setOpenaiSelectedModels] = useState<Set<string>>(
@@ -111,6 +114,13 @@ export function ProvidersWorkbenchPage() {
 
   const isOpenAI = activeGroup?.id === 'openaiCompatibility';
 
+  const handleProviderSortBy = useCallback((value: ProviderSortBy) => {
+    setProviderSortBy(value);
+    if (value === 'priority') {
+      setProviderSortDir('desc');
+    }
+  }, []);
+
   const availableOpenaiModels = useMemo(() => {
     if (!isOpenAI || !activeGroup) return [];
     const seen = new Set<string>();
@@ -125,7 +135,17 @@ export function ProvidersWorkbenchPage() {
   }, [activeGroup, isOpenAI]);
 
   const visibleResources = useMemo(() => {
-    if (!isOpenAI) return filteredResources;
+    if (!isOpenAI) {
+      if (providerSortBy === 'default') return filteredResources;
+      const sorted = [...filteredResources].sort((a, b) => {
+        const diff = (a.priority ?? 0) - (b.priority ?? 0);
+        if (diff !== 0) {
+          return providerSortDir === 'asc' ? diff : -diff;
+        }
+        return a.originalIndex - b.originalIndex;
+      });
+      return sorted;
+    }
 
     let arr = filteredResources;
     if (openaiSelectedModels.size > 0) {
@@ -144,8 +164,8 @@ export function ProvidersWorkbenchPage() {
         const bn = (b.name ?? b.identifier ?? '').toLowerCase();
         diff = an.localeCompare(bn);
       } else if (openaiSortBy === 'priority') {
-        const ap = (a.raw as OpenAIProviderConfig).priority ?? 0;
-        const bp = (b.raw as OpenAIProviderConfig).priority ?? 0;
+        const ap = a.priority ?? 0;
+        const bp = b.priority ?? 0;
         diff = ap - bp;
       } else {
         const aStats = getOpenAIProviderRecentWindowStats(
@@ -158,7 +178,10 @@ export function ProvidersWorkbenchPage() {
         );
         diff = aStats.success - bStats.success;
       }
-      return openaiSortDir === 'asc' ? diff : -diff;
+      if (diff !== 0) {
+        return openaiSortDir === 'asc' ? diff : -diff;
+      }
+      return a.originalIndex - b.originalIndex;
     });
 
     return sorted;
@@ -168,6 +191,8 @@ export function ProvidersWorkbenchPage() {
     openaiSelectedModels,
     openaiSortBy,
     openaiSortDir,
+    providerSortBy,
+    providerSortDir,
     usageByProvider,
   ]);
 
@@ -397,6 +422,16 @@ export function ProvidersWorkbenchPage() {
           disableMutations={disableMutations}
           usageByProvider={usageByProvider}
           openaiControls={openaiControls}
+          providerSortControls={
+            activeGroup.id !== 'ampcode' && !isOpenAI
+              ? {
+                  sortBy: providerSortBy,
+                  sortDir: providerSortDir,
+                  onSortBy: handleProviderSortBy,
+                  onSortDir: setProviderSortDir,
+                }
+              : undefined
+          }
           onView={openView}
           onEdit={openEdit}
           onDelete={handleDelete}
