@@ -30,7 +30,7 @@ function buildState(config?: AmpcodeConfig | null): AmpcodeFormState {
     : [emptyModelMapping()];
   return {
     upstreamUrl: safe.upstreamUrl ?? '',
-    upstreamApiKey: safe.upstreamApiKey ?? '',
+    upstreamApiKey: '',
     forceModelMappings: safe.forceModelMappings === true,
     upstreamMappings,
     modelMappings,
@@ -103,7 +103,8 @@ export function AmpcodeForm({
 
       const next: AmpcodeConfig = {
         upstreamUrl: form.upstreamUrl.trim() || undefined,
-        upstreamApiKey: form.upstreamApiKey.trim() || undefined,
+        upstreamApiKey:
+          form.upstreamApiKey.trim() || initialConfig.upstreamApiKey?.trim() || undefined,
         upstreamApiKeys: upstreamApiKeys.length ? upstreamApiKeys : undefined,
         modelMappings: modelMappings.length ? modelMappings : undefined,
         forceModelMappings: form.forceModelMappings,
@@ -147,6 +148,9 @@ export function AmpcodeForm({
             spellCheck={false}
             value={form.upstreamApiKey}
             onChange={(e) => setForm((s) => ({ ...s, upstreamApiKey: e.target.value }))}
+            data-1p-ignore="true"
+            data-lpignore="true"
+            data-bwignore="true"
             disabled={mutating}
           />
         </div>

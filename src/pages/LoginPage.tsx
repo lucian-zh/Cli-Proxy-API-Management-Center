@@ -281,6 +281,7 @@ export function LoginPage() {
                 label={t('login.management_key_label')}
                 placeholder={t('login.management_key_placeholder')}
                 type={showKey ? 'text' : 'password'}
+                name="cpa-management-key"
                 autoComplete="new-password"
                 aria-autocomplete="none"
                 spellCheck={false}
