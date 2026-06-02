@@ -171,6 +171,7 @@ export function LogsPage() {
 
     if (!incremental) {
       setLoading(true);
+      setFileLoggingRequired(false);
     }
     setError('');
 
@@ -187,7 +188,6 @@ export function LogsPage() {
           ? { after: latestCursorRef.current, limit: MAX_BUFFER_LINES }
           : { limit: MAX_BUFFER_LINES };
       const data = await logsApi.fetchLogs(params);
-      setFileLoggingRequired(false);
 
       // 更新游标
       if (data.latestCursor) {
@@ -347,7 +347,6 @@ export function LogsPage() {
     if (connectionStatus === 'connected') {
       latestCursorRef.current = undefined;
       requestLogHomeIpByIdRef.current = {};
-      setFileLoggingRequired(false);
       loadLogs(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
