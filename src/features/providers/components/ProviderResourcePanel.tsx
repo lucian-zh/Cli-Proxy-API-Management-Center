@@ -5,21 +5,12 @@ import codexLogo from '@/assets/icons/codex.svg';
 import geminiLogo from '@/assets/icons/gemini.svg';
 import openaiLogo from '@/assets/icons/openai-light.svg';
 import vertexLogo from '@/assets/icons/vertex.svg';
-import {
-  IconChevronDown,
-  IconChevronUp,
-  IconPlus,
-  IconSearch,
-} from '@/components/ui/icons';
-import { Select } from '@/components/ui/Select';
+import { IconPlus, IconSearch } from '@/components/ui/icons';
 import type { ProviderRecentUsageMap } from '@/components/providers/utils';
 import type { ProviderBrand, ProviderGroup, ProviderResource } from '../types';
 import { ProviderResourceTable } from './ProviderResourceTable';
-import {
-  OpenAIBrandToolbar,
-  type OpenAISortBy,
-  type SortDir,
-} from './OpenAIBrandToolbar';
+import { ProviderResourceToolbar } from './ProviderResourceToolbar';
+import type { ProviderSortBy, SortDir } from '../types';
 import styles from './ProviderResourcePanel.module.scss';
 
 const LOGOS: Record<ProviderBrand, { src: string; invertOnDark?: boolean }> = {
@@ -31,21 +22,14 @@ const LOGOS: Record<ProviderBrand, { src: string; invertOnDark?: boolean }> = {
   ampcode: { src: ampcodeLogo },
 };
 
-export interface OpenAIPanelControls {
-  sortBy: OpenAISortBy;
+export interface ProviderPanelControls {
+  sortBy: ProviderSortBy;
   sortDir: SortDir;
-  onSortBy: (value: OpenAISortBy) => void;
+  onSortBy: (value: ProviderSortBy) => void;
   onSortDir: (value: SortDir) => void;
   availableModels: ReadonlyArray<string>;
   selectedModels: ReadonlySet<string>;
   onSelectedModelsChange: (next: Set<string>) => void;
-}
-
-export interface ProviderSortControls {
-  sortBy: 'default' | 'priority';
-  sortDir: SortDir;
-  onSortBy: (value: 'default' | 'priority') => void;
-  onSortDir: (value: SortDir) => void;
 }
 
 interface ProviderResourcePanelProps {
@@ -56,8 +40,7 @@ interface ProviderResourcePanelProps {
   selectedId: string | null;
   disableMutations?: boolean;
   usageByProvider?: ProviderRecentUsageMap;
-  openaiControls?: OpenAIPanelControls;
-  providerSortControls?: ProviderSortControls;
+  toolbarControls?: ProviderPanelControls;
   onView: (resource: ProviderResource) => void;
   onEdit: (resource: ProviderResource) => void;
   onDelete: (resource: ProviderResource) => void;
@@ -73,8 +56,7 @@ export function ProviderResourcePanel({
   selectedId,
   disableMutations,
   usageByProvider,
-  openaiControls,
-  providerSortControls,
+  toolbarControls,
   onView,
   onEdit,
   onDelete,
@@ -85,10 +67,6 @@ export function ProviderResourcePanel({
   const logo = LOGOS[group.id];
 
   const realResources = filteredResources.filter((r) => !r.flags.isPlaceholder);
-  const sortOptions = [
-    { value: 'default', label: t('providersPage.toolbar.sort.default') },
-    { value: 'priority', label: t('providersPage.toolbar.sort.priority') },
-  ];
 
   return (
     <section className={styles.panel}>
@@ -124,60 +102,18 @@ export function ProviderResourcePanel({
             </div>
           ) : null}
         </div>
-        {openaiControls ? (
+        {toolbarControls ? (
           <div className={styles.headerToolbarRow}>
-            <OpenAIBrandToolbar
-              sortBy={openaiControls.sortBy}
-              sortDir={openaiControls.sortDir}
-              onSortBy={openaiControls.onSortBy}
-              onSortDir={openaiControls.onSortDir}
-              availableModels={openaiControls.availableModels}
-              selectedModels={openaiControls.selectedModels}
-              onSelectedModelsChange={openaiControls.onSelectedModelsChange}
+            <ProviderResourceToolbar
+              key={group.id}
+              sortBy={toolbarControls.sortBy}
+              sortDir={toolbarControls.sortDir}
+              onSortBy={toolbarControls.onSortBy}
+              onSortDir={toolbarControls.onSortDir}
+              availableModels={toolbarControls.availableModels}
+              selectedModels={toolbarControls.selectedModels}
+              onSelectedModelsChange={toolbarControls.onSelectedModelsChange}
             />
-          </div>
-        ) : providerSortControls ? (
-          <div className={styles.headerToolbarRow}>
-            <div className={styles.sortGroup}>
-              <span className={styles.sortLabel}>
-                {t('providersPage.toolbar.sortBy')}
-              </span>
-              <Select
-                value={providerSortControls.sortBy}
-                options={sortOptions}
-                onChange={(value) =>
-                  providerSortControls.onSortBy(value as 'default' | 'priority')
-                }
-                ariaLabel={t('providersPage.toolbar.sortBy')}
-                size="sm"
-              />
-              <button
-                type="button"
-                className={styles.sortDirBtn}
-                onClick={() =>
-                  providerSortControls.onSortDir(
-                    providerSortControls.sortDir === 'asc' ? 'desc' : 'asc'
-                  )
-                }
-                disabled={providerSortControls.sortBy === 'default'}
-                aria-label={
-                  providerSortControls.sortDir === 'asc'
-                    ? t('providersPage.toolbar.sort.directionAsc')
-                    : t('providersPage.toolbar.sort.directionDesc')
-                }
-                title={
-                  providerSortControls.sortDir === 'asc'
-                    ? t('providersPage.toolbar.sort.directionAsc')
-                    : t('providersPage.toolbar.sort.directionDesc')
-                }
-              >
-                {providerSortControls.sortDir === 'asc' ? (
-                  <IconChevronUp size={14} />
-                ) : (
-                  <IconChevronDown size={14} />
-                )}
-              </button>
-            </div>
           </div>
         ) : null}
       </div>
