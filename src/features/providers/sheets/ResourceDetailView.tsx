@@ -20,7 +20,7 @@ export function ResourceDetailView({ resource, usageByProvider }: ResourceDetail
     ['baseUrl', resource.baseUrl ?? t('providersPage.status.notSet')],
     ['proxyUrl', resource.proxyUrl ?? t('providersPage.status.notSet')],
     ['prefix', resource.prefix ?? t('providersPage.status.none')],
-    ['priority', resource.brand === 'ampcode' ? '—' : String(resource.priority ?? 0)],
+    ['priority', String(resource.priority ?? 0)],
     ['models', String(resource.modelCount)],
     ['headers', String(resource.headerCount)],
   ];

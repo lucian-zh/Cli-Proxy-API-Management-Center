@@ -106,11 +106,6 @@ export function ProviderResourceTable({
         renderMetric('keys', t('providersPage.table.metrics.keys'), r.apiKeyEntryCount),
         renderMetric('headers', t('providersPage.table.metrics.headers'), r.headerCount)
       );
-    } else if (r.brand === 'ampcode') {
-      items.push(
-        renderMetric('mappings', t('providersPage.table.metrics.mappings'), r.modelCount),
-        renderMetric('keys', t('providersPage.table.metrics.keys'), r.apiKeyEntryCount)
-      );
     } else {
       items.push(
         renderMetric('models', t('providersPage.table.metrics.models'), r.modelCount),
@@ -127,14 +122,6 @@ export function ProviderResourceTable({
   };
 
   const renderStatus = (r: ProviderResource) => {
-    if (r.brand === 'ampcode' && r.flags.isPlaceholder) {
-      return (
-        <span className={`${styles.statusBadge} ${styles.statusDisabled}`}>
-          <IconAlertTriangle size={14} />
-          {t('providersPage.status.notConfigured')}
-        </span>
-      );
-    }
     if (r.disabled) {
       return (
         <span className={`${styles.statusBadge} ${styles.statusDisabled}`}>
@@ -161,16 +148,6 @@ export function ProviderResourceTable({
         </div>
       );
     }
-    if (r.brand === 'ampcode') {
-      return (
-        <div className={styles.primaryCell}>
-          <span className={styles.primaryName}>Amp CLI</span>
-          <span className={styles.primarySub}>
-            {r.apiKeyPreview ?? t('providersPage.table.noFallbackKey')}
-          </span>
-        </div>
-      );
-    }
     return (
       <div className={styles.primaryCell}>
         <span className={styles.primaryName}>{r.apiKeyPreview ?? '—'}</span>
@@ -187,16 +164,10 @@ export function ProviderResourceTable({
         </span>
       );
     }
-    if (r.brand === 'ampcode' && !r.baseUrl) {
-      return <span className={styles.baseUrl}>{t('providersPage.status.notConfigured')}</span>;
-    }
     return <span className={styles.baseUrl}>{r.baseUrl ?? t('providersPage.status.notSet')}</span>;
   };
 
   const renderPriority = (r: ProviderResource) => {
-    if (r.brand === 'ampcode') {
-      return <span className={styles.baseUrl}>—</span>;
-    }
     return <span className={styles.priorityValue}>{r.priority ?? 0}</span>;
   };
 
@@ -219,15 +190,12 @@ export function ProviderResourceTable({
       </TableHeader>
       <TableBody>
         {resources.map((resource) => {
-          const isAmpcode = resource.brand === 'ampcode';
           return (
             <TableRow key={resource.id} selected={resource.id === selectedId}>
               <TableCell>{renderPrimary(resource)}</TableCell>
               <TableCell>{renderBaseUrl(resource)}</TableCell>
               <TableCell>
-                {resource.brand === 'ampcode' ? (
-                  <span className={styles.baseUrl}>—</span>
-                ) : resource.prefix ? (
+                {resource.prefix ? (
                   <span className={styles.chip}>{resource.prefix}</span>
                 ) : (
                   <span className={styles.baseUrl}>{t('providersPage.status.none')}</span>
@@ -238,7 +206,7 @@ export function ProviderResourceTable({
               <TableCell>
                 <div className={styles.statusCell}>
                   {renderStatus(resource)}
-                  {usageByProvider && resource.brand !== 'ampcode' ? (
+                  {usageByProvider ? (
                     <>
                       {(() => {
                         const stats = resolveTotalStats(resource, usageByProvider);
@@ -263,8 +231,11 @@ export function ProviderResourceTable({
               </TableCell>
               <TableCell alignRight>
                 <div className={styles.actions}>
-                  {!isAmpcode && onToggleDisabled ? (
-                    <span className={styles.toggleWrap} onClick={(e) => e.stopPropagation()}>
+                  {onToggleDisabled ? (
+                    <span
+                      className={styles.toggleWrap}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <ToggleSwitch
                         checked={!resource.disabled}
                         disabled={disableMutations}
@@ -302,35 +273,19 @@ export function ProviderResourceTable({
                   >
                     <IconPencil size={16} />
                   </button>
-                  {isAmpcode ? (
-                    <button
-                      type="button"
-                      className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
-                      aria-label={t('providersPage.actions.clear')}
-                      title={t('providersPage.actions.clear')}
-                      disabled={disableMutations || resource.flags.isPlaceholder}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(resource);
-                      }}
-                    >
-                      <IconTrash2 size={16} />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
-                      aria-label={t('providersPage.actions.delete')}
-                      title={t('providersPage.actions.delete')}
-                      disabled={disableMutations}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(resource);
-                      }}
-                    >
-                      <IconTrash2 size={16} />
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
+                    aria-label={t('providersPage.actions.delete')}
+                    title={t('providersPage.actions.delete')}
+                    disabled={disableMutations}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(resource);
+                    }}
+                  >
+                    <IconTrash2 size={16} />
+                  </button>
                 </div>
               </TableCell>
             </TableRow>
