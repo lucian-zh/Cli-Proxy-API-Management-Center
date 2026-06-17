@@ -69,6 +69,9 @@ export const buildCodexResponsesEndpoint = (baseUrl: string): string => {
   if (/\/v1\/responses$/i.test(trimmed)) {
     return trimmed;
   }
+  if (/\/v1\/messages$/i.test(trimmed)) {
+    return trimmed.replace(/\/messages$/i, '/responses');
+  }
   if (/\/v1\/models$/i.test(trimmed)) {
     return trimmed.replace(/\/models$/i, '/responses');
   }
@@ -83,6 +86,12 @@ export const buildClaudeMessagesEndpoint = (baseUrl: string): string => {
   if (!trimmed) return '';
   if (trimmed.endsWith('/v1/messages')) {
     return trimmed;
+  }
+  if (/\/v1\/responses$/i.test(trimmed)) {
+    return trimmed.replace(/\/responses$/i, '/messages');
+  }
+  if (/\/v1\/models$/i.test(trimmed)) {
+    return trimmed.replace(/\/models$/i, '/messages');
   }
   if (trimmed.endsWith('/v1')) {
     return `${trimmed}/messages`;

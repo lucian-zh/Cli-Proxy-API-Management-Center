@@ -51,6 +51,14 @@ const resolveBearerToken = (headers: Record<string, string>): string => {
   return match ? match[1].trim() : '';
 };
 
+const hasBearerToken = (headers: Record<string, string>): boolean =>
+  Boolean(resolveBearerToken(headers));
+
+const setHeaderValue = (headers: Record<string, string>, name: string, value: string): void => {
+  const existingKey = Object.keys(headers).find((key) => key.toLowerCase() === name.toLowerCase());
+  headers[existingKey ?? name] = value;
+};
+
 export interface UseConnectivityTestArgs {
   brand: ProviderBrand;
   baseUrl: string;
@@ -306,7 +314,7 @@ export function useConnectivityTest(
     const customHeaders = buildHeaderObject(formHeaders);
     const explicitKey = (apiKey ?? '').trim();
     const persistedKey = (fallbackApiKey ?? '').trim();
-    const hasAuthorization = hasHeader(customHeaders, 'authorization');
+    const hasAuthorization = hasBearerToken(customHeaders);
     const resolvedKey = explicitKey || persistedKey;
     const resolvedAuthIndex = (authIndex ?? '').trim() || undefined;
 
@@ -319,11 +327,11 @@ export function useConnectivityTest(
       'Content-Type': 'application/json',
       ...customHeaders,
     };
-    if (!hasHeader(headerObj, 'authorization')) {
+    if (!hasBearerToken(headerObj)) {
       if (resolvedKey) {
-        headerObj.Authorization = `Bearer ${resolvedKey}`;
+        setHeaderValue(headerObj, 'Authorization', `Bearer ${resolvedKey}`);
       } else if (resolvedAuthIndex) {
-        headerObj.Authorization = 'Bearer $TOKEN$';
+        setHeaderValue(headerObj, 'Authorization', 'Bearer $TOKEN$');
       }
     }
 
@@ -446,10 +454,11 @@ export function useConnectivityTest(
     const persistedKey = (fallbackApiKey ?? '').trim();
     const headerKey = resolveBearerToken(customHeaders);
     const hasApiKeyHeader = hasHeader(customHeaders, 'x-api-key');
+    const hasAuthorization = Boolean(headerKey);
     const resolvedKey = explicitKey || persistedKey || headerKey;
     const resolvedAuthIndex = (authIndex ?? '').trim() || undefined;
 
-    if (!resolvedKey && !hasApiKeyHeader && !resolvedAuthIndex) {
+    if (!resolvedKey && !hasApiKeyHeader && !hasAuthorization && !resolvedAuthIndex) {
       setClaudeStatus({ state: 'error', message: messages.apiKeyRequired });
       return;
     }
@@ -465,6 +474,13 @@ export function useConnectivityTest(
       headerObj['x-api-key'] = resolvedKey;
     } else if (!hasApiKeyHeader && resolvedAuthIndex) {
       headerObj['x-api-key'] = '$TOKEN$';
+    }
+    if (!hasBearerToken(headerObj)) {
+      if (resolvedKey) {
+        setHeaderValue(headerObj, 'Authorization', `Bearer ${resolvedKey}`);
+      } else if (resolvedAuthIndex) {
+        setHeaderValue(headerObj, 'Authorization', 'Bearer $TOKEN$');
+      }
     }
 
     setClaudeStatus({ state: 'loading', message: '' });

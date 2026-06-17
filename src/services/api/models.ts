@@ -39,6 +39,9 @@ const buildV1ModelsEndpoint = (baseUrl: string): string => {
   if (!normalized) return '';
   const trimmed = normalized.replace(/\/+$/g, '');
   if (/\/v1\/models$/i.test(trimmed)) return trimmed;
+  if (/\/v1\/(?:responses|messages)$/i.test(trimmed)) {
+    return trimmed.replace(/\/(?:responses|messages)$/i, '/models');
+  }
   if (/\/v1$/i.test(trimmed)) return `${trimmed}/models`;
   return `${trimmed}/v1/models`;
 };
@@ -81,6 +84,14 @@ const resolveBearerTokenFromAuthorization = (headers: Record<string, string>): s
   return match?.[1]?.trim() || '';
 };
 
+const hasBearerToken = (headers: Record<string, string>): boolean =>
+  Boolean(resolveBearerTokenFromAuthorization(headers));
+
+const setHeaderValue = (headers: Record<string, string>, name: string, value: string): void => {
+  const existingKey = Object.keys(headers).find((key) => key.toLowerCase() === name.toLowerCase());
+  headers[existingKey ?? name] = value;
+};
+
 export const modelsApi = {
   /**
    * Fetch available models from /v1/models endpoint (for system info page)
@@ -92,8 +103,8 @@ export const modelsApi = {
     }
 
     const resolvedHeaders = { ...headers };
-    if (apiKey && !hasHeader(resolvedHeaders, 'authorization')) {
-      resolvedHeaders.Authorization = `Bearer ${apiKey}`;
+    if (apiKey && !hasBearerToken(resolvedHeaders)) {
+      setHeaderValue(resolvedHeaders, 'Authorization', `Bearer ${apiKey}`);
     }
 
     const response = await axios.get(endpoint, {
@@ -120,10 +131,10 @@ export const modelsApi = {
 
     const trimmedAuthIndex = authIndex?.trim() || undefined;
     const resolvedHeaders = { ...headers };
-    if (apiKey && !hasHeader(resolvedHeaders, 'authorization')) {
-      resolvedHeaders.Authorization = `Bearer ${apiKey}`;
-    } else if (trimmedAuthIndex && !hasHeader(resolvedHeaders, 'authorization')) {
-      resolvedHeaders.Authorization = 'Bearer $TOKEN$';
+    if (apiKey && !hasBearerToken(resolvedHeaders)) {
+      setHeaderValue(resolvedHeaders, 'Authorization', `Bearer ${apiKey}`);
+    } else if (trimmedAuthIndex && !hasBearerToken(resolvedHeaders)) {
+      setHeaderValue(resolvedHeaders, 'Authorization', 'Bearer $TOKEN$');
     }
 
     const result = await apiCallApi.request({
@@ -157,10 +168,10 @@ export const modelsApi = {
 
     const trimmedAuthIndex = authIndex?.trim() || undefined;
     const resolvedHeaders = { ...headers };
-    if (apiKey && !hasHeader(resolvedHeaders, 'authorization')) {
-      resolvedHeaders.Authorization = `Bearer ${apiKey}`;
-    } else if (trimmedAuthIndex && !hasHeader(resolvedHeaders, 'authorization')) {
-      resolvedHeaders.Authorization = 'Bearer $TOKEN$';
+    if (apiKey && !hasBearerToken(resolvedHeaders)) {
+      setHeaderValue(resolvedHeaders, 'Authorization', `Bearer ${apiKey}`);
+    } else if (trimmedAuthIndex && !hasBearerToken(resolvedHeaders)) {
+      setHeaderValue(resolvedHeaders, 'Authorization', 'Bearer $TOKEN$');
     }
 
     const result = await apiCallApi.request({
@@ -216,6 +227,13 @@ export const modelsApi = {
       resolvedHeaders['x-api-key'] = resolvedApiKey;
     } else if (trimmedAuthIndex && !hasHeader(resolvedHeaders, 'x-api-key')) {
       resolvedHeaders['x-api-key'] = '$TOKEN$';
+    }
+    if (!hasBearerToken(resolvedHeaders)) {
+      if (resolvedApiKey) {
+        setHeaderValue(resolvedHeaders, 'Authorization', `Bearer ${resolvedApiKey}`);
+      } else if (trimmedAuthIndex) {
+        setHeaderValue(resolvedHeaders, 'Authorization', 'Bearer $TOKEN$');
+      }
     }
     if (!hasHeader(resolvedHeaders, 'anthropic-version')) {
       resolvedHeaders['anthropic-version'] = DEFAULT_ANTHROPIC_VERSION;

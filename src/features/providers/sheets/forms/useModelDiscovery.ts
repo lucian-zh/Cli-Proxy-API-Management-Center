@@ -77,10 +77,10 @@ export function useModelDiscovery(args: UseModelDiscoveryArgs): UseModelDiscover
           resolvedAuthIndex
         );
       } else if (brand === 'openaiCompatibility') {
-        const firstEntry = (apiKeyEntries ?? []).find(
-          (e) =>
-            (e.apiKey ?? '').trim() || (e.existingApiKey ?? '').trim() || (e.authIndex ?? '').trim()
-        );
+        const entries = apiKeyEntries ?? [];
+        const firstEntry =
+          entries.find((e) => (e.apiKey ?? '').trim() || (e.existingApiKey ?? '').trim()) ??
+          entries.find((e) => (e.authIndex ?? '').trim());
         const entryKey =
           (firstEntry?.apiKey ?? '').trim() || (firstEntry?.existingApiKey ?? '').trim();
         const entryAuthIndex = (firstEntry?.authIndex ?? '').trim() || resolvedAuthIndex;
