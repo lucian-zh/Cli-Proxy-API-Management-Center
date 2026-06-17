@@ -1572,7 +1572,6 @@
     "toolbar": {
       "sortBy": "排序",
       "sort": {
-        "default": "原始顺序",
         "name": "名称",
         "priority": "优先级",
         "recentSuccess": "近期成功数",

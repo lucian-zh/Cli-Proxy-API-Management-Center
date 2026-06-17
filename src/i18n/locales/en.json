@@ -1572,7 +1572,6 @@
     "toolbar": {
       "sortBy": "Sort by",
       "sort": {
-        "default": "Original order",
         "name": "Name",
         "priority": "Priority",
         "recentSuccess": "Recent success",

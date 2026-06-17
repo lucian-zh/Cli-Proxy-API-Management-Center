@@ -1549,7 +1549,6 @@
     "toolbar": {
       "sortBy": "Сортировка",
       "sort": {
-        "default": "Исходный порядок",
         "name": "Имя",
         "priority": "Приоритет",
         "recentSuccess": "Недавние успехи",

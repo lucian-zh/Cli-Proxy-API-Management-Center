@@ -39,42 +39,6 @@
   gap: 8px;
 }
 
-.sortGroup {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.sortLabel {
-  font-size: 11px;
-  color: var(--muted-foreground);
-  white-space: nowrap;
-}
-
-.sortDirBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: background-color $transition-fast, color $transition-fast;
-
-  &:hover:not(:disabled) {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-  }
-
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
-}
-
 .titleArea {
   min-width: 0;
   display: flex;
