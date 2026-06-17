@@ -372,6 +372,20 @@
     "quota_refresh_success": "Квота для \"{{name}}\" обновлена",
     "quota_refresh_failed": "Не удалось обновить квоту для \"{{name}}\": {{message}}"
   },
+  "antigravity_subscription": {
+    "subscription_label": "Подписка",
+    "plan_badge": "План {{plan}}",
+    "loading_short": "План...",
+    "error_badge": "Ошибка плана",
+    "load_failed": "Не удалось проверить подписку: {{message}}",
+    "missing_auth_index": "В файле авторизации отсутствует auth_index",
+    "empty_data": "Данные подписки отсутствуют",
+    "plan_unknown": "Неизвестно",
+    "plan_free": "Free",
+    "plan_pro": "Pro",
+    "plan_ultra": "Ultra",
+    "plan_ultra_lite": "Ultra Lite"
+  },
   "antigravity_quota": {
     "title": "Квота Antigravity",
     "empty_title": "Файлы авторизации Antigravity отсутствуют",
@@ -501,6 +515,9 @@
     "refresh_button": "Обновить квоту",
     "fetch_all": "Получить все",
     "monthly_credits": "Месячные кредиты",
+    "plan_label": "План",
+    "plan_supergrok": "SuperGrok",
+    "plan_supergrok_heavy": "SuperGrok Heavy",
     "pay_as_you_go_label": "Оплата по факту",
     "pay_as_you_go_enabled": "Включено, лимит {{cap}}",
     "pay_as_you_go_disabled": "Отключено"
