@@ -5,12 +5,12 @@
 ## 当前同步状态
 
 - 当前 fork 分支：`main`
-- 当前 fork 发布提交：以 `v1.17.1` tag 指向为准
+- 当前 fork 发布提交：`5dbb03f`（`v1.17.1` tag 指向）
 - 当前 fork 合并提交：`58a02c1`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.1'`）
-- 当前 fork release：准备发布 `v1.17.1`
+- 当前 fork release：`v1.17.1`
 - 当前官方上游：`upstream/main` = `ed4124f`
 - 当前官方最新 tag：`v1.17.1`
-- 当前 origin release：准备发布 `v1.17.1`
+- 当前 origin release：`v1.17.1`
 - Release 页面：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/tag/v1.17.1
 - Release 产物：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/download/v1.17.1/management.html
 
