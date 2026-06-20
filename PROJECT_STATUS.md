@@ -1,17 +1,23 @@
 # 项目状态
 
-更新时间：2026-06-18（Asia/Shanghai）
+更新时间：2026-06-20（Asia/Shanghai）
 
 ## 当前同步状态
 
 - 当前 fork 分支：`main`
-- 当前 fork HEAD：`16143c6`（`Merge remote-tracking branch 'upstream/main'`）
-- 当前 fork release：`v1.16.11`
-- 当前官方上游：`upstream/main` = `069eaf2`
-- 当前官方最新 tag：`v1.16.11`
-- 当前 origin release：`v1.16.11`
-- Release 页面：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/tag/v1.16.11
-- Release 产物：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/download/v1.16.11/management.html
+- 当前 fork HEAD：`58a02c1`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.1'`）
+- 当前 fork release：准备发布 `v1.17.1`
+- 当前官方上游：`upstream/main` = `ed4124f`
+- 当前官方最新 tag：`v1.17.1`
+- 当前 origin release：准备发布 `v1.17.1`
+- Release 页面：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/tag/v1.17.1
+- Release 产物：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/download/v1.17.1/management.html
+
+## 当前上游版本说明
+
+- 官方 `v1.17.1` 没有移除普通 Gemini provider。
+- 普通 Gemini API key 管理、Gemini 模型获取、`generateContent` 连接测试仍存在。
+- 官方 `v1.17.1` 移除的是 Gemini CLI 相关引用，包括 Gemini CLI OAuth、Gemini CLI 配额、`enable-gemini-cli-endpoint` 配置和相关内部端点 UI。
 
 ## 维护策略
 
@@ -75,7 +81,7 @@ tag 推送会触发 `.github/workflows/release.yml`，自动构建并发布 `man
 
 ## 最近验证记录
 
-最近一次完整验证在 `v1.16.11` 合并发布前完成：
+最近一次完整验证在 `v1.17.1` 合并发布前完成：
 
 - `git diff --check`：通过
 - `./node_modules/.bin/tsc --noEmit`：通过
@@ -88,4 +94,3 @@ tag 推送会触发 `.github/workflows/release.yml`，自动构建并发布 `man
 - `dist/` 是本地构建产物，已在 `.gitignore` 中；发布由 GitHub Actions 重新构建，平时可以删除。
 - `node_modules/` 是本地依赖目录，已在 `.gitignore` 中；不要提交。
 - 不要提交 `dist/management.html` 或 `dist/index.html`。
-
