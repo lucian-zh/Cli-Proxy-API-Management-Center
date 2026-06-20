@@ -5,7 +5,8 @@
 ## 当前同步状态
 
 - 当前 fork 分支：`main`
-- 当前 fork HEAD：`58a02c1`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.1'`）
+- 当前 fork 发布提交：以 `v1.17.1` tag 指向为准
+- 当前 fork 合并提交：`58a02c1`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.1'`）
 - 当前 fork release：准备发布 `v1.17.1`
 - 当前官方上游：`upstream/main` = `ed4124f`
 - 当前官方最新 tag：`v1.17.1`
