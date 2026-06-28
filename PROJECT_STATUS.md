@@ -1,22 +1,23 @@
 # 项目状态
 
-更新时间：2026-06-25（Asia/Shanghai）
+更新时间：2026-06-28（Asia/Shanghai）
 
 ## 当前同步状态
 
 - 当前 fork 分支：`main`
-- 当前 fork 发布提交：以 `v1.17.6` tag 指向为准
-- 当前 fork 合并提交：`de2c4f3`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.6'`）
-- 当前 fork release：`v1.17.6`
-- 当前官方上游：`upstream/main` = `d7847da`
-- 当前官方最新 tag：`v1.17.6`
-- 当前 origin release：`v1.17.6`
-- Release 页面：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/tag/v1.17.6
-- Release 产物：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/download/v1.17.6/management.html
+- 当前 fork 发布提交：以 `v1.17.7` tag 指向为准
+- 当前 fork 合并提交：`259caaf`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.7'`）
+- 当前 fork release：`v1.17.7`
+- 当前官方上游：`upstream/main` = `acf432b`
+- 当前官方最新 tag：`v1.17.7`
+- 当前 origin release：`v1.17.7`
+- Release 页面：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/tag/v1.17.7
+- Release 产物：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/download/v1.17.7/management.html
 
 ## 当前上游版本说明
 
-- 官方 `v1.17.6` 新增 APIKEY.FUN provider/quick start 管理入口、plugin OAuth 支持，以及 Codex reset credits 展示。
+- 官方 `v1.17.7` 主要更新 Auth Files 状态过滤交互/本地化、AuthFilesStatusFilterCard 视觉与交互结构，以及 trackWrapper/若干组件样式和可读性整理。
+- 官方 `v1.17.6` 引入的 APIKEY.FUN provider/quick start 管理入口、plugin OAuth 支持，以及 Codex reset credits 展示仍保留。
 - 普通 Gemini API key 管理、Gemini 模型获取、`generateContent` 连接测试仍存在。
 - Gemini CLI OAuth/配额/`enable-gemini-cli-endpoint` 仍按官方 `v1.17.1` 起的策略移除。
 
@@ -82,13 +83,14 @@ tag 推送会触发 `.github/workflows/release.yml`，自动构建并发布 `man
 
 ## 最近验证记录
 
-最近一次完整验证在 `v1.17.6` 合并发布前完成：
+最近一次完整验证在 `v1.17.7` 合并发布前完成：
 
 - `git diff --check`：通过
 - `./node_modules/.bin/tsc --noEmit`：通过
 - `./node_modules/.bin/tsc && ./node_modules/.bin/vite build`：通过
-- 关键触点 ESLint：仍被仓库既有 React hooks 规则问题拦住，当前命中 `src/features/providers/useProviderWorkbench.ts` 的 `react-hooks/set-state-in-effect`。
+- 关键触点 ESLint：通过
 - 全量 ESLint：仍失败，当前是仓库既有的 27 个 React hooks 规则错误，主要为 `react-hooks/set-state-in-effect` 和 `react-hooks/refs`。这不是最近 fork 改动新增的问题。
+- 已清理官方 `v1.17.7` 新增的 1 条 unused eslint-disable 指令，使全量 ESLint 输出回到上述既有问题范围。
 
 ## 本地清理约定
 
