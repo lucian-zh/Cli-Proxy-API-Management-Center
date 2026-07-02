@@ -1,22 +1,23 @@
 # 项目状态
 
-更新时间：2026-06-28（Asia/Shanghai）
+更新时间：2026-07-02（Asia/Shanghai）
 
 ## 当前同步状态
 
 - 当前 fork 分支：`main`
-- 当前 fork 发布提交：以 `v1.17.7` tag 指向为准
-- 当前 fork 合并提交：`259caaf`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.7'`）
-- 当前 fork release：`v1.17.7`
-- 当前官方上游：`upstream/main` = `acf432b`
-- 当前官方最新 tag：`v1.17.7`
-- 当前 origin release：`v1.17.7`
-- Release 页面：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/tag/v1.17.7
-- Release 产物：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/download/v1.17.7/management.html
+- 当前 fork 发布提交：以 `v1.17.8` tag 指向为准
+- 当前 fork 合并提交：`a03867f`（`Merge remote-tracking branch 'refs/remotes/upstream/tags/v1.17.8'`）
+- 当前 fork release：`v1.17.8`
+- 当前官方上游：`upstream/main` = `e9817a8`
+- 当前官方最新 tag：`v1.17.8`
+- 当前 origin release：`v1.17.8`
+- Release 页面：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/tag/v1.17.8
+- Release 产物：https://github.com/lucian-zh/Cli-Proxy-API-Management-Center/releases/download/v1.17.8/management.html
 
 ## 当前上游版本说明
 
-- 官方 `v1.17.7` 主要更新 Auth Files 状态过滤交互/本地化、AuthFilesStatusFilterCard 视觉与交互结构，以及 trackWrapper/若干组件样式和可读性整理。
+- 官方 `v1.17.8` 主要新增 plugin store authentication 配置、Plugin Store 鉴权处理、Auth Files prefix proxy WebSocket 支持，以及 Antigravity client/user-agent 配置。
+- 官方 `v1.17.7` 引入的 Auth Files 状态过滤交互/本地化、AuthFilesStatusFilterCard 视觉与交互结构，以及 trackWrapper/若干组件样式整理仍保留。
 - 官方 `v1.17.6` 引入的 APIKEY.FUN provider/quick start 管理入口、plugin OAuth 支持，以及 Codex reset credits 展示仍保留。
 - 普通 Gemini API key 管理、Gemini 模型获取、`generateContent` 连接测试仍存在。
 - Gemini CLI OAuth/配额/`enable-gemini-cli-endpoint` 仍按官方 `v1.17.1` 起的策略移除。
@@ -83,14 +84,15 @@ tag 推送会触发 `.github/workflows/release.yml`，自动构建并发布 `man
 
 ## 最近验证记录
 
-最近一次完整验证在 `v1.17.7` 合并发布前完成：
+最近一次完整验证在 `v1.17.8` 合并发布前完成：
 
 - `git diff --check`：通过
 - `./node_modules/.bin/tsc --noEmit`：通过
 - `./node_modules/.bin/tsc && ./node_modules/.bin/vite build`：通过
-- 关键触点 ESLint：通过
+- 关键 fork 触点 ESLint：通过
+- 官方本轮改动较多的 `src/features/plugins/PluginStorePage.tsx` 仍命中仓库既有 `react-hooks/set-state-in-effect` 规则。
 - 全量 ESLint：仍失败，当前是仓库既有的 27 个 React hooks 规则错误，主要为 `react-hooks/set-state-in-effect` 和 `react-hooks/refs`。这不是最近 fork 改动新增的问题。
-- 已清理官方 `v1.17.7` 新增的 1 条 unused eslint-disable 指令，使全量 ESLint 输出回到上述既有问题范围。
+- Claude/Codex endpoint 归一化矩阵：通过
 
 ## 本地清理约定
 
